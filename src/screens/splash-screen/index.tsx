@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
 import { NavigationRoutes } from '../../enums/navigation';
+import { Colors } from '../../helpers/colors';
 
 const SplashScreen = ({ navigation }: { navigation: any }) => {
   useEffect(() => {
@@ -28,11 +29,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    color: '#fff',
+    color: Colors.PRIMARY,
   },
   text: {
     fontSize: 20,
-    color: '#000',
+    color: Colors.BACKGROUND,
     fontWeight: '800',
   },
 });

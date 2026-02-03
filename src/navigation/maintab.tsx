@@ -5,6 +5,10 @@ import { SvgImageNames } from '../assets/svg-images';
 import LinearGradient from 'react-native-linear-gradient';
 import { StyleSheet } from 'react-native';
 import { NavigationRoutes } from '../enums/navigation';
+import WalletScreen from '../screens/wallet-screen';
+import ProfileScreen from '../screens/profile-screen';
+import ShareScreen from '../screens/share-screen';
+import { Colors } from '../helpers/colors';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,7 +27,7 @@ export const MainTab = () => {
     },
     {
       name: NavigationRoutes.WALLET,
-      component: HomeScreen,
+      component: WalletScreen,
       icon: 'WalletIcon',
     },
     {
@@ -33,12 +37,12 @@ export const MainTab = () => {
     },
     {
       name: NavigationRoutes.SHARE,
-      component: HomeScreen,
+      component: ShareScreen,
       icon: 'ShareIcon',
     },
     {
       name: NavigationRoutes.PROFILE,
-      component: HomeScreen,
+      component: ProfileScreen,
       icon: 'ProfileIcon',
     },
   ];
@@ -48,6 +52,7 @@ export const MainTab = () => {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
+        animation: 'shift',
         tabBarStyle: {
           height: 60,
           backgroundColor: 'transparent',
@@ -72,7 +77,7 @@ export const MainTab = () => {
               <Icon
                 icon={item.icon}
                 size={22}
-                color={props.focused ? '#9b9b9c' : '#f6f2f2'}
+                color={props.focused ? Colors.TAB_INACTIVE : Colors.TAB_ACTIVE}
               />
             ),
           }}
@@ -84,7 +89,7 @@ export const MainTab = () => {
 
 const TabBarBackground = () => (
   <LinearGradient
-    colors={['#0d1f50', '#192f6a', '#3b5998']}
+    colors={[Colors.GRADIENT_START, Colors.GRADIENT_MID, Colors.GRADIENT_END]}
     style={StyleSheet.absoluteFill}
     start={{ x: 0, y: 0 }}
     end={{ x: 1, y: 0 }}

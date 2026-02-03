@@ -1,19 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import PageWrapper from '../../components/page-wrapper';
 import { Colors } from '../../helpers/colors';
 
-const HomeScreen = ({ navigation }: { navigation: any }) => {
-  useEffect(() => {
-    init();
-  }, []);
-
-  const init = async () => {};
-
+const ShareScreen = ({ navigation }: { navigation: any }) => {
   return (
-    <PageWrapper navigation={navigation} title="Home">
+    <PageWrapper navigation={navigation} title="Send to">
       <View style={styles.container}>
-        <Text style={styles.text}>Home Screen</Text>
+        <Text style={styles.text}>Share Screen</Text>
       </View>
     </PageWrapper>
   );
@@ -33,4 +27,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default ShareScreen;

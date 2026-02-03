@@ -1,19 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import PageWrapper from '../../components/page-wrapper';
 import { Colors } from '../../helpers/colors';
 
-const HomeScreen = ({ navigation }: { navigation: any }) => {
-  useEffect(() => {
-    init();
-  }, []);
-
-  const init = async () => {};
-
+const WalletScreen = ({ navigation }: { navigation: any }) => {
   return (
-    <PageWrapper navigation={navigation} title="Home">
+    <PageWrapper navigation={navigation} title="Wallet">
       <View style={styles.container}>
-        <Text style={styles.text}>Home Screen</Text>
+        <Text style={styles.text}>Wallet Screen</Text>
       </View>
     </PageWrapper>
   );
@@ -32,5 +26,4 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
 });
-
-export default HomeScreen;
+export default WalletScreen;

@@ -13,12 +13,24 @@ import { Colors } from '../../helpers/colors';
 import { HttpStatus } from '../../helpers/http-helper';
 import { ProductService } from '../../service/products';
 import { ProductBO } from '../../types/products';
+import Loader from '../../components/loader';
+import ActionModal from '../../components/action-modal';
 
 const PER_PAGE = 6;
 const SWIPE_VELOCITY_THRESHOLD = 500;
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
   const [products, setProducts] = useState<ProductBO[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [modalConfig, setModalConfig] = useState<{
+    visible: boolean;
+    title: string;
+    message: string;
+  }>({
+    visible: false,
+    title: '',
+    message: '',
+  });
   const allProducts = useRef<ProductBO[]>([]);
   const [page, setPage] = useState<number>(0);
 
@@ -33,20 +45,53 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
   const init = async () => {
     try {
+      setLoading(true);
       const response = await ProductService.getAllProducts();
 
       if (response.status === HttpStatus.SUCCESS && response.data) {
         allProducts.current = response.data.data.products;
         setPage(1);
+        if (response.data.data.products.length === 0) {
+          setModalConfig({
+            visible: true,
+            title: 'No Products',
+            message: 'There are no products available at the moment.',
+          });
+        }
+      } else if (response.status === HttpStatus.NOTFOUND) {
+        allProducts.current = [];
+        setProducts([]);
+        setModalConfig({
+          visible: true,
+          title: 'Not Found',
+          message: 'Products not found. Please try again later.',
+        });
       } else {
         allProducts.current = [];
         setProducts([]);
+        setModalConfig({
+          visible: true,
+          title: 'Error',
+          message: 'An unexpected error occurred. Please try again.',
+        });
       }
     } catch (error) {
       allProducts.current = [];
       setProducts([]);
+      setModalConfig({
+        visible: true,
+        title: 'Network Error',
+        message:
+          'Unable to connect to the server. Please check your internet connection.',
+      });
+    } finally {
+      setLoading(false);
     }
   };
+
+  const closeModal = useCallback(() => {
+    setModalConfig(prev => ({ ...prev, visible: false }));
+  }, []);
 
   useEffect(() => {
     if (page > 0) {
@@ -85,20 +130,35 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
   );
 
   return (
-    <PageWrapper navigation={navigation} title="Home">
-      <View style={styles.container}>
-        <GestureDetector gesture={panGesture}>
-          <FlatList
-            data={products}
-            renderItem={renderItem}
-            keyExtractor={item => item.id.toString()}
-            numColumns={2}
-            contentContainerStyle={styles.listContent}
-            columnWrapperStyle={styles.columnWrapper}
-          />
-        </GestureDetector>
-      </View>
-    </PageWrapper>
+    <>
+      <PageWrapper navigation={navigation} title="Home">
+        <View style={styles.container}>
+          <GestureDetector gesture={panGesture}>
+            <FlatList
+              data={products}
+              renderItem={renderItem}
+              keyExtractor={item => item.id.toString()}
+              numColumns={2}
+              contentContainerStyle={styles.listContent}
+              columnWrapperStyle={styles.columnWrapper}
+            />
+          </GestureDetector>
+        </View>
+      </PageWrapper>
+      <Loader visible={loading} onClose={() => setLoading(false)} />
+      <ActionModal
+        visible={modalConfig.visible}
+        onClose={closeModal}
+        title={modalConfig.title}
+        description={modalConfig.message}
+        okText="Try Again"
+        needCancel={false}
+        onSubmit={async () => {
+          await init();
+          closeModal();
+        }}
+      />
+    </>
   );
 };
 

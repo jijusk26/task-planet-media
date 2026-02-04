@@ -18,7 +18,12 @@ const SplashScreen = ({ navigation }: { navigation: any }) => {
 
   return (
     <>
-      <StatusBar hidden />
+      <StatusBar
+        hidden
+        barStyle="dark-content"
+        translucent
+        backgroundColor={'#fff'}
+      />
       <View style={styles.container}>
         <SvgXml xml={AppLogoIcon} width={100} />
         <Text style={styles.text}>Stop Shop</Text>

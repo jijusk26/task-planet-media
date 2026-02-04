@@ -177,6 +177,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
               ListEmptyComponent={renderEmptyComponent}
               contentContainerStyle={styles.listContent}
               columnWrapperStyle={styles.columnWrapper}
+              showsVerticalScrollIndicator={false}
             />
           </GestureDetector>
         </View>

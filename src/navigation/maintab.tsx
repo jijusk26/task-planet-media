@@ -76,7 +76,7 @@ export const MainTab = () => {
             }) => (
               <Icon
                 icon={item.icon}
-                size={22}
+                size={20}
                 color={props.focused ? Colors.TAB_INACTIVE : Colors.TAB_ACTIVE}
               />
             ),

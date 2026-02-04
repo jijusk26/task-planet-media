@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import PageWrapper from '../../components/page-wrapper';
 import ProductCard from '../../components/product-card';
@@ -15,6 +15,7 @@ import { ProductService } from '../../service/products';
 import { ProductBO } from '../../types/products';
 import Loader from '../../components/loader';
 import ActionModal from '../../components/action-modal';
+import { LocalImages } from '../../assets/images/images';
 
 const PER_PAGE = 6;
 const SWIPE_VELOCITY_THRESHOLD = 500;
@@ -95,12 +96,14 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
   useEffect(() => {
     if (page > 0) {
+      setLoading(true);
       const startIndex = (page - 1) * PER_PAGE;
       const paginatedProducts = allProducts.current.slice(
         startIndex,
         startIndex + PER_PAGE,
       );
       setProducts(paginatedProducts);
+      setLoading(false);
     }
   }, [page]);
 
@@ -114,18 +117,49 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
   const panGesture = useMemo(
     () =>
-      Gesture.Pan().onEnd(e => {
-        if (e.velocityX < -SWIPE_VELOCITY_THRESHOLD) {
-          handleSwipeLeft();
-        } else if (e.velocityX > SWIPE_VELOCITY_THRESHOLD) {
-          handleSwipeRight();
-        }
-      }),
+      Gesture.Pan()
+        .activeOffsetX([-15, 15])
+        .failOffsetY([-10, 10])
+        .onEnd(e => {
+          if (Math.abs(e.velocityY) > Math.abs(e.velocityX)) {
+            return;
+          }
+          if (e.velocityX < -SWIPE_VELOCITY_THRESHOLD) {
+            handleSwipeLeft();
+          } else if (e.velocityX > SWIPE_VELOCITY_THRESHOLD) {
+            handleSwipeRight();
+          }
+        }),
     [handleSwipeLeft, handleSwipeRight],
   );
 
   const renderItem = useCallback(
     ({ item }: { item: ProductBO }) => <ProductCard item={item} />,
+    [],
+  );
+
+  const renderHeader = useCallback(
+    () => (
+      <View style={styles.banner}>
+        <Image
+          source={LocalImages.banner}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </View>
+    ),
+    [],
+  );
+
+  const renderEmptyComponent = useCallback(
+    () => (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyTitle}>No Products Found</Text>
+        <Text style={styles.emptyText}>
+          There are no products available at the moment.
+        </Text>
+        <Text style={styles.emptyText}>Please check back later.</Text>
+      </View>
+    ),
     [],
   );
 
@@ -139,6 +173,8 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
               renderItem={renderItem}
               keyExtractor={item => item.id.toString()}
               numColumns={2}
+              ListHeaderComponent={renderHeader}
+              ListEmptyComponent={renderEmptyComponent}
               contentContainerStyle={styles.listContent}
               columnWrapperStyle={styles.columnWrapper}
             />
@@ -154,8 +190,8 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         okText="Try Again"
         needCancel={false}
         onSubmit={async () => {
-          await init();
           closeModal();
+          await init();
         }}
       />
     </>
@@ -170,10 +206,39 @@ const styles = StyleSheet.create({
   listContent: {
     paddingHorizontal: 15,
     marginTop: 5,
+    flexGrow: 1,
   },
   columnWrapper: {
     gap: 10,
     marginBottom: 10,
+  },
+  banner: {
+    height: 150,
+    marginVertical: 10,
+    borderRadius: 20,
+    overflow: 'hidden',
+    elevation: 4,
+    backgroundColor: Colors.BACKGROUND,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 60,
+    paddingHorizontal: 30,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: Colors.TEXT,
+    marginBottom: 10,
+  },
+  emptyText: {
+    fontSize: 14,
+    color: Colors.TEXT,
+    textAlign: 'center',
+    opacity: 0.6,
+    lineHeight: 20,
   },
 });
 

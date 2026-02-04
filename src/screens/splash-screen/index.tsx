@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
 import { NavigationRoutes } from '../../enums/navigation';
 import { Colors } from '../../helpers/colors';
+import { SvgXml } from 'react-native-svg';
+import { AppLogoIcon } from '../../assets/app-logo-svg';
 
 const SplashScreen = ({ navigation }: { navigation: any }) => {
   useEffect(() => {
@@ -18,6 +20,7 @@ const SplashScreen = ({ navigation }: { navigation: any }) => {
     <>
       <StatusBar hidden />
       <View style={styles.container}>
+        <SvgXml xml={AppLogoIcon} width={100} />
         <Text style={styles.text}>Stop Shop</Text>
       </View>
     </>

@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     height: 30,
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: Colors.PRIMARY,
+    backgroundColor: Colors.SECONDARY,
     borderRadius: 15,
     flexDirection: 'row',
     paddingHorizontal: 10,
